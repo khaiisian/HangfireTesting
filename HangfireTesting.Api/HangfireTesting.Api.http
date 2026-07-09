@@ -1,0 +1,6 @@
+@HangfireTesting.Api_HostAddress = http://localhost:5127
+
+GET {{HangfireTesting.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
