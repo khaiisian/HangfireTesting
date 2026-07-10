@@ -30,12 +30,24 @@ namespace HangfireTesting.Api.Controllers
             // Note: Hangfire's scheduler only checks for due jobs every 15 seconds (default)
         }
 
+        // Recurring: runs on a cron schedule
         [HttpPost("recurring")]
         public IActionResult Recurring()
         {
             RecurringJob.AddOrUpdate<JobService>("nightly-cleanup", x => x.NightlyCleanup(), Cron.Minutely);
 
             return Ok("Recurring Job registered.");
+        }
+
+        // Continuation job
+        [HttpPost("continuous_jobs")]
+        public IActionResult Continuous_Jobs()
+        {
+            var job1 = BackgroundJob.Enqueue<JobService>(x => x.SampleJob("Job A"));
+
+            BackgroundJob.ContinueJobWith<JobService>(job1, x => x.SampleJob("Job B"));
+
+            return Ok("Job A has started. Job B will continue after.");
         }
     }
 }

@@ -23,4 +23,9 @@ public class JobService
     {
         _logger.LogInformation("Running nightly cleanup at {Time}", DateTime.Now);
     }
+
+    public void SampleJob(string jobName)
+    {
+        _logger.LogInformation("{JobName} started running", jobName);
+    }
 }
