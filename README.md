@@ -136,58 +136,9 @@ step and run almost right away.
    ```
 5. **Create the database yourself first** (Hangfire does not create it).
 
-### Errors I hit (and what they mean)
-
-**Error A:** *"Please add a NuGet package reference to either 'Microsoft.Data.SqlClient'
-or 'System.Data.SqlClient'"*
-→ Hangfire.SqlServer knows how to talk to SQL Server but has no "phone line".
-I must add one myself:
-```
-dotnet add package Microsoft.Data.SqlClient
-```
-
-**Error B:** *"Cannot open database 'HangfireTesting'... Login failed for user 'sa'."*
-→ Two problems in one:
-1. The **database does not exist** yet (Hangfire makes tables, not the database).
-2. The **login was rejected** — wrong password, `sa` account turned off, or SQL
-   login (SQL authentication) not enabled.
-→ Getting this error is actually progress: it means the app finally *reached* SQL Server.
-
 ---
 
-## 7. Protecting the dashboard (auth)
-
-By default anyone can open `/hangfire`. Fine on my PC, dangerous on the internet.
-
-**Key point:** the real work here is **Authentication & Authorization**, which is a
-general ASP.NET topic — NOT a Hangfire thing.
-- Authentication = *who are you?* (login)
-- Authorization = *what are you allowed to do?* (admin?)
-
-Hangfire only gives a tiny hook — a filter that asks ONE question before showing
-the dashboard: *"is this user allowed? yes/no"*.
-
-```csharp
-public class HangfireAuthFilter : IDashboardAuthorizationFilter
-{
-    public bool Authorize(DashboardContext context)
-    {
-        var httpContext = context.GetHttpContext();
-        return httpContext.User.Identity?.IsAuthenticated ?? false;
-    }
-}
-```
-```csharp
-app.UseHangfireDashboard("/hangfire", new DashboardOptions
-{
-    Authorization = new[] { new HangfireAuthFilter() }
-});
-```
-> Do this LAST — it only works after my app has real login.
-
----
-
-## 8. Quick reference — my project
+## 7. Quick reference — my project
 
 - Project: `HangfireTesting.Api`  (.NET 10)
 - Dashboard: `https://localhost:7172/hangfire`
