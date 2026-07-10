@@ -49,5 +49,12 @@ namespace HangfireTesting.Api.Controllers
 
             return Ok("Job A has started. Job B will continue after.");
         }
+
+        [HttpPost("broken_job")]
+        public IActionResult BrokenJob()
+        {
+            BackgroundJob.Enqueue<JobService>(x=>x.BrokenJob());
+            return Ok("Broken job has been started.");
+        }
     }
 }

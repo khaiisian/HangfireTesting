@@ -10,7 +10,9 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 // 1. Register Hangfire services + choose storage
-builder.Services.AddHangfire(cfg => cfg.UseInMemoryStorage());
+builder.Services.AddHangfire(cfg => 
+    cfg.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangFireDb"))
+    );
 
 // 2. Register the background server that actually runs jobs
 //builder.Services.AddHangfireServer();

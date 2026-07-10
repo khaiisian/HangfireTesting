@@ -28,4 +28,10 @@ public class JobService
     {
         _logger.LogInformation("{JobName} started running", jobName);
     }
+
+    public void BrokenJob()
+    {
+        _logger.LogInformation("Trying to start the broken job.....");
+        throw new Exception("The job has failed on purpose.");
+    }
 }
